@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify"; // 🔥 import toast
+
 
 // ✅ Use environment variable for backend URL
 const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
@@ -35,10 +37,14 @@ export default function ProductForm() {
         }),
       });
       if (res.ok) {
-        alert("✅ Product Added!");
+        toast.success("✅ Product Added!", { theme: "colored" }); // ✅ Success toast
+        
         navigate("/products");
       } else {
-        alert("❌ Failed to add product.");
+        const err = await res.json();
+        toast.error("❌ Error: " + err.message, { theme: "colored" }); // ❌ Error toast
+        //
+        // alert("❌ Failed to add product.");
       }
     } catch (err) {
       console.error(err);

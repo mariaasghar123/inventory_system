@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify"; // 🔥 import toast
 
 const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
@@ -58,10 +59,12 @@ export default function PurchaseItemNewForm() {
       });
 
       if (res.ok) {
-        alert("✅ Purchase item added successfully!");
+        toast.success("✅ Purchase item added successfully!", { theme: "colored" }); // ✅ Success toast
+        // alert("✅ Purchase item added successfully!");
         navigate("/purchaseitems");
       } else {
-        alert("❌ Failed to add purchase item.");
+        toast.error("❌ Failed to add purchase item", { theme: "colored" }); // ❌ Error toast
+        // alert("❌ Failed to add purchase item.");
       }
     } catch (err) {
       console.error(err);

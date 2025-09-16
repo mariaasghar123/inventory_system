@@ -1,4 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import DashboardLayout from "./components/layout/DashboardLayout";
 import DashboardHome from "./pages/dashboard/DashboardHome";
 import ProductList from "./pages/products/ProductList";
@@ -35,9 +37,11 @@ import EditSaleItemForm from "./pages/saleitem/SaleItemEdit";
 export default function App() {
   return (
     <Router>
+      <ToastContainer position="top-center" autoClose={3000} />
       <Routes>
        
         <Route element={<DashboardLayout />}>
+        
           <Route path="/" element={<DashboardHome />} />
           <Route path="/products" element={<ProductList />} />
           <Route path="/products/new" element={<ProductForm />} />
@@ -57,7 +61,7 @@ export default function App() {
           <Route path="/expenses" element={<ExpenseList />} />
           <Route path="/expenses/:id/edit" element={<ExpenseEditForm />} />
           <Route path="/expenses/new" element={<ExpenseNewForm />} />
-          <Route path="/purchase" element={<PurchaseList />} />
+          <Route path="/purchases" element={<PurchaseList />} />
           <Route path="/purchases/edit/:id" element={<PurchaseEditForm />} />
           <Route path="/purchases/new" element={<PurchaseForm />} />
           <Route path="/purchaseitems" element={<PurchaseItemList />} />

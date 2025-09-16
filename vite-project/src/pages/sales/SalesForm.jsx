@@ -1,8 +1,12 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify"; // 🔥 import toast
+
 
 const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 export default function SaleForm() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     invoice_no: "",
     date: "",
@@ -34,7 +38,9 @@ export default function SaleForm() {
       });
 
       if (res.ok) {
-        alert("✅ Sale Added Successfully!");
+        toast.success("✅ Sale Added Successfully!", { theme: "colored" }); // ✅ Success toast
+        // alert("✅ Sale Added Successfully!");
+        navigate("/sales");
         setFormData({
           invoice_no: "",
           date: "",
@@ -45,7 +51,8 @@ export default function SaleForm() {
         });
       } else {
         const err = await res.json();
-        alert("❌ Error: " + (err.message || "Failed to add sale"));
+        toast.error("❌ Error: " + (err.message || "Failed to add sale"), { theme: "colored" }); // ❌ Error toast
+        // alert("❌ Error: " + (err.message || "Failed to add sale"));
       }
     } catch (err) {
       console.error("Error adding sale:", err);

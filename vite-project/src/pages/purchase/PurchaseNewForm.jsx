@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify"; // 🔥 import toast
 
 const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
@@ -76,17 +77,19 @@ export default function PurchaseForm() {
     };
 
     try {
-      const res = await fetch(`${BASE_URL}/api/purchase`, {
+      const res = await fetch(`${BASE_URL}/api/purchases`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(purchaseData),
       });
 
       if (res.ok) {
-        alert("✅ Purchase added successfully");
-        navigate("/purchase");
+        toast.success("✅ Purchase added successfully!", { theme: "colored" }); // ✅ Success toast
+        // alert("✅ Purchase added successfully");
+        navigate("/purchases");
       } else {
-        alert("❌ Failed to add purchase");
+        toast.error("❌ Failed to add purchase", { theme: "colored" }); // ❌ Error toast
+        // alert("❌ Failed to add purchase");
       }
     } catch (err) {
       console.error(err);

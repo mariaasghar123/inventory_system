@@ -51,7 +51,7 @@ export default function SaleItemList() {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-6">
         <h2 className="text-3xl font-bold text-gray-800">Sale Items</h2>
         <button
-          onClick={() => navigate("/saleitems/new")}
+          onClick={() => navigate("/salesitem/new")}
           className="bg-blue-600 text-white px-5 py-2.5 rounded-lg shadow hover:bg-blue-700 transition-all duration-200"
         >
           + New Sale Item

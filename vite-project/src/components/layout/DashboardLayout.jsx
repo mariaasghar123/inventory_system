@@ -57,7 +57,7 @@ export default function DashboardLayout() {
           <Link to="/expenses" className="flex items-center gap-2 hover:bg-blue-500 px-3 py-2 rounded">
             <FaMoneyBill /> Expenses
           </Link>
-          <Link to="/purchase" className="flex items-center gap-2 hover:bg-blue-500 px-3 py-2 rounded">
+          <Link to="/purchases" className="flex items-center gap-2 hover:bg-blue-500 px-3 py-2 rounded">
             <FaShoppingBag /> Purchases
           </Link>
           <Link to="/purchaseitems" className="flex items-center gap-2 hover:bg-blue-500 px-3 py-2 rounded">

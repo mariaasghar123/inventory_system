@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify"; // 🔥 import toast
+
 
 // Use environment variable for backend URL
 const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
@@ -38,10 +40,11 @@ export default function ExpenseNewForm() {
       });
 
       if (res.ok) {
-        alert("Expense added successfully ✅");
+        toast.success("✅ Expense added successfully!", { theme: "colored" }); // ✅ Success toast
         navigate("/expenses");
       } else {
-        alert("Failed to add expense ❌");
+        toast.error("❌ Failed to add expense", { theme: "colored" }); // ❌ Error toast
+        // alert("Failed to add expense ❌");
       }
     } catch (err) {
       console.error(err);

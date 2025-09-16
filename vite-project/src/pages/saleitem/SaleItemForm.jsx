@@ -1,8 +1,12 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify"; // 🔥 import toast
+
 
 const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 export default function SaleItemForm() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     saleId: "",
     productId: "",
@@ -34,7 +38,9 @@ export default function SaleItemForm() {
       });
 
       if (res.ok) {
-        alert("✅ Sale Item Added!");
+        toast.success("✅ Sale Item Added!", { theme: "colored" }); // ✅ Success toast
+        // alert("✅ Sale Item Added!");
+        navigate("/salesitem");
         setFormData({
           saleId: "",
           productId: "",
@@ -43,7 +49,8 @@ export default function SaleItemForm() {
           subtotal: "",
         });
       } else {
-        alert("❌ Failed to add Sale Item");
+        toast.error("❌ Failed to add Sale Item", { theme: "colored" }); // ❌ Error toast
+        // alert("❌ Failed to add Sale Item");
       }
     } catch (err) {
       console.error(err);

@@ -60,7 +60,7 @@ export default function DashboardHome() {
       title: "Purchases",
       desc: "Manage purchases",
       icon: <FaShoppingBag className="text-white text-4xl mb-3" />,
-      link: "/purchase",
+      link: "/purchases",
       bgColor: "bg-purple-700",
       hoverColor: "hover:bg-purple-600",
     },

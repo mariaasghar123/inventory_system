@@ -1,8 +1,11 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify"; // 🔥 import toast
 
 const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 export default function StockBatchForm() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     productId: "",
     batch_no: "",
@@ -32,15 +35,16 @@ export default function StockBatchForm() {
       });
 
       if (res.ok) {
-        alert("✅ Stock Batch Added!");
+        toast.success("✅ Stock Batch Added!", { theme: "colored" }); // ✅ Success toast
+        navigate("/stockbatches");
         setFormData({ productId: "", batch_no: "", expiry_date: "", qty: "" });
       } else {
         const err = await res.json();
-        alert("❌ Error: " + err.message);
+        toast.error("❌ Error: " + err.message, { theme: "colored" }); // ❌ Error toast
       }
     } catch (err) {
       console.error("Submit error:", err);
-      alert("❌ Error submitting stock batch");
+      toast.error("❌ Error submitting stock batch", { theme: "colored" }); // ❌ Error toast
     }
   };
 

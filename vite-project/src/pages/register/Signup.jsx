@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { toast } from "react-toastify"; // 🔥 import toast
+
 
 // ✅ Base URL for API
 const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
@@ -36,7 +38,9 @@ export default function Signup() {
       const data = await res.json();
 
       if (res.ok) {
-        alert("✅ Signup successful! Please login.");
+        toast.success("✅ Signup successful! Please login.", { theme: "colored" }); // ✅ Success toast
+
+        // alert("✅ Signup successful! Please login.");
         navigate("/login");
       } else {
         setError(data.message || "Signup failed");

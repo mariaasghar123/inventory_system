@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify"; // 🔥 import toast
+
 
 const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
@@ -64,10 +66,12 @@ export default function ReturnNewForm() {
       });
 
       if (res.ok) {
-        alert("✅ Return added successfully!");
+        toast.success("✅ Return added successfully!", { theme: "colored" }); // ✅ Success toast
+        // alert("✅ Return added successfully!");
         navigate("/returns");
       } else {
-        alert("❌ Failed to add return.");
+        toast.error("❌ Failed to add return", { theme: "colored" }); // ❌ Error toast
+        // alert("❌ Failed to add return.");
       }
     } catch (err) {
       console.error(err);
