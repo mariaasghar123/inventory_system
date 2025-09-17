@@ -13,10 +13,13 @@ export default function EditSale() {
     total: "",
     discount: "",
     paymentMethod: "",
-    user: "",
+    createdBy: "",
   });
 
-  // ✅ Fetch existing sale data on mount
+  // ✅ New state to store users
+  const [users, setUsers] = useState([]);
+
+  // ✅ Fetch sale details
   useEffect(() => {
     const fetchSale = async () => {
       try {
@@ -37,6 +40,20 @@ export default function EditSale() {
     };
     fetchSale();
   }, [id]);
+
+  // ✅ Fetch users for dropdown
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const res = await fetch(`${BASE_URL}/api/users`);
+        const data = await res.json();
+        setUsers(data);
+      } catch (err) {
+        console.error("Error fetching users:", err);
+      }
+    };
+    fetchUsers();
+  }, []);
 
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -72,8 +89,11 @@ export default function EditSale() {
         </h2>
 
         <div className="space-y-5">
+          {/* Invoice No */}
           <div>
-            <label className="block text-gray-700 font-medium mb-1">Invoice No</label>
+            <label className="block text-gray-700 font-medium mb-1">
+              Invoice No
+            </label>
             <input
               name="invoice_no"
               value={formData.invoice_no}
@@ -83,6 +103,7 @@ export default function EditSale() {
             />
           </div>
 
+          {/* Date */}
           <div>
             <label className="block text-gray-700 font-medium mb-1">Date</label>
             <input
@@ -94,6 +115,7 @@ export default function EditSale() {
             />
           </div>
 
+          {/* Total */}
           <div>
             <label className="block text-gray-700 font-medium mb-1">Total</label>
             <input
@@ -106,8 +128,11 @@ export default function EditSale() {
             />
           </div>
 
+          {/* Discount */}
           <div>
-            <label className="block text-gray-700 font-medium mb-1">Discount</label>
+            <label className="block text-gray-700 font-medium mb-1">
+              Discount
+            </label>
             <input
               name="discount"
               type="number"
@@ -118,26 +143,43 @@ export default function EditSale() {
             />
           </div>
 
+          {/* Payment Method Dropdown */}
           <div>
-            <label className="block text-gray-700 font-medium mb-1">Payment Method</label>
-            <input
+            <label className="block text-gray-700 font-medium mb-1">
+              Payment Method
+            </label>
+            <select
               name="paymentMethod"
               value={formData.paymentMethod}
               onChange={handleChange}
-              placeholder="Payment Method"
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400"
-            />
+            >
+              <option value="">Select Payment Method</option>
+              <option value="Cash">Cash</option>
+              <option value="Easypaisa">Easypaisa</option>
+              <option value="JazzCash">JazzCash</option>
+              <option value="Card">Card</option>
+            </select>
           </div>
 
+          {/* Created By Dropdown */}
           <div>
-            <label className="block text-gray-700 font-medium mb-1">Created By</label>
-            <input
+            <label className="block text-gray-700 font-medium mb-1">
+              Created By
+            </label>
+            <select
               name="createdBy"
               value={formData.createdBy}
               onChange={handleChange}
-              placeholder="Created By"
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
-            />
+            >
+              <option value="">Select User</option>
+              {users.map((user) => (
+                <option key={user._id} value={user._id}>
+                  {user.name}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
 

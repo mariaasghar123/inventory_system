@@ -6,10 +6,12 @@ const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 export default function SaleItemList() {
   const [saleItems, setSaleItems] = useState([]);
+  const [products, setProducts] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchSaleItems();
+    fetchProducts();
   }, []);
 
   const fetchSaleItems = async () => {
@@ -20,6 +22,16 @@ export default function SaleItemList() {
     } catch (err) {
       console.error(err);
       alert("❌ Failed to fetch sale items");
+    }
+  };
+
+  const fetchProducts = async () => {
+    try {
+      const res = await fetch(`${BASE_URL}/api/products`);
+      const data = await res.json();
+      setProducts(data);
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -45,6 +57,12 @@ export default function SaleItemList() {
     navigate(`/saleitems/edit/${id}`);
   };
 
+  // Helper: productId se name find karo
+  const getProductName = (id) => {
+    const product = products.find((p) => p.id === id);
+    return product ? product.name : id; // fallback to ID
+  };
+
   return (
     <div className="p-6 max-w-6xl mx-auto">
       {/* Header */}
@@ -65,7 +83,7 @@ export default function SaleItemList() {
             <tr>
               <th className="p-3 border">ID</th>
               <th className="p-3 border">Sale ID</th>
-              <th className="p-3 border">Product ID</th>
+              <th className="p-3 border">Product</th>
               <th className="p-3 border">Qty</th>
               <th className="p-3 border">Price</th>
               <th className="p-3 border">Subtotal</th>
@@ -92,13 +110,16 @@ export default function SaleItemList() {
                 >
                   <td className="p-3 border">{item.id}</td>
                   <td className="p-3 border">{item.saleId}</td>
-                  <td className="p-3 border">{item.productId}</td>
+                  <td className="p-3 border">
+                    {getProductName(item.productId)}
+                  </td>
                   <td className="p-3 border">{item.qty}</td>
                   <td className="p-3 border">{item.price}</td>
-                  <td className="p-3 border">{item.subtotal}</td>
+                  <td className="p-3 border">
+                    {item.subtotal || item.qty * item.price}
+                  </td>
                   <td className="p-3 border">
                     <div className="flex justify-center gap-4">
-                      {/* Edit */}
                       <button
                         onClick={() => handleEdit(item.id)}
                         className="text-green-600 hover:text-green-800 transition"
@@ -107,7 +128,6 @@ export default function SaleItemList() {
                         <FaEdit size={18} />
                       </button>
 
-                      {/* Delete */}
                       <button
                         onClick={() => handleDelete(item.id)}
                         className="text-red-600 hover:text-red-800 transition"

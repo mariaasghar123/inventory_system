@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify"; // 🔥 import toast
-
+import { toast } from "react-toastify";
 
 // ✅ Use environment variable for backend URL
 const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
@@ -23,6 +22,14 @@ export default function ProductForm() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // ✅ Barcode auto generate karne ka function
+  const generateBarcode = () => {
+    // 12 digit random number
+    const randomBarcode = Math.floor(100000000000 + Math.random() * 900000000000).toString();
+    setFormData({ ...formData, barcode: randomBarcode });
+    toast.info("🔄 Barcode generated: " + randomBarcode, { theme: "colored" });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -37,14 +44,11 @@ export default function ProductForm() {
         }),
       });
       if (res.ok) {
-        toast.success("✅ Product Added!", { theme: "colored" }); // ✅ Success toast
-        
+        toast.success("✅ Product Added!", { theme: "colored" }); 
         navigate("/products");
       } else {
         const err = await res.json();
-        toast.error("❌ Error: " + err.message, { theme: "colored" }); // ❌ Error toast
-        //
-        // alert("❌ Failed to add product.");
+        toast.error("❌ Error: " + err.message, { theme: "colored" });
       }
     } catch (err) {
       console.error(err);
@@ -95,13 +99,23 @@ export default function ProductForm() {
             className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
           />
 
-          <input
-            name="barcode"
-            value={formData.barcode}
-            onChange={handleChange}
-            placeholder="Barcode"
-            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
-          />
+          {/* ✅ Barcode field with generate button */}
+          <div className="flex gap-2">
+            <input
+              name="barcode"
+              value={formData.barcode}
+              onChange={handleChange}
+              placeholder="Barcode"
+              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
+            />
+            <button
+              type="button"
+              onClick={generateBarcode}
+              className="bg-green-500 hover:bg-green-600 text-white px-3 rounded-lg"
+            >
+              Generate
+            </button>
+          </div>
 
           <input
             name="purchase_price"

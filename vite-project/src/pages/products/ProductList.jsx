@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FaEdit, FaTrash } from "react-icons/fa";
+import Barcode from "react-barcode"; // 🔥 barcode image
 const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
 export default function ProductList() {
   const [products, setProducts] = useState([]);
 
@@ -19,19 +21,41 @@ export default function ProductList() {
     }
   };
 
+  // ✅ Delete product
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this product?")) return;
 
     try {
-      // Delete product
-const res = await fetch(`${BASE_URL}/api/products/${id}`, { method: "DELETE" });
-      // const res = await fetch(`http://localhost:5000/api/products/${id}`, {
-        
+      const res = await fetch(`${BASE_URL}/api/products/${id}`, {
+        method: "DELETE",
+      });
       if (res.ok) {
         setProducts(products.filter((p) => p.id !== id));
         alert("Product deleted successfully!");
       } else {
         alert("Failed to delete product.");
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // ✅ Generate barcode for an existing product
+  const handleGenerateBarcode = async (product) => {
+    // simple random 10-digit barcode
+    const newBarcode = Math.floor(1000000000 + Math.random() * 9000000000).toString();
+    try {
+      const res = await fetch(`${BASE_URL}/api/products/${product.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...product, barcode: newBarcode }),
+      });
+      if (res.ok) {
+        // reload product list
+        fetchProducts();
+        alert("Barcode generated and saved!");
+      } else {
+        alert("Failed to generate barcode");
       }
     } catch (err) {
       console.error(err);
@@ -79,7 +103,24 @@ const res = await fetch(`${BASE_URL}/api/products/${id}`, { method: "DELETE" });
                 <td className="py-3 px-4">{p.unit}</td>
                 <td className="py-3 px-4 font-medium text-green-600">{p.sale_price}</td>
                 <td className="py-3 px-4 text-red-600">{p.purchase_price}</td>
-                <td className="py-3 px-4">{p.barcode}</td>
+
+                {/* Barcode cell */}
+                <td className="py-3 px-4">
+                  {p.barcode ? (
+                    <div className="flex flex-col">
+                      <span className="text-xs mb-1">{p.barcode}</span>
+                      <Barcode value={p.barcode} width={1} height={40} fontSize={12} />
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => handleGenerateBarcode(p)}
+                      className="bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded text-sm"
+                    >
+                      Generate Barcode
+                    </button>
+                  )}
+                </td>
+
                 <td className="py-3 px-4">{p.reorder_level}</td>
                 <td className="py-3 px-4 text-center space-x-3">
                   {/* Edit button */}
