@@ -20,6 +20,7 @@ export default function ProfitLoss() {
   const [error, setError] = useState("");
 
   const fetchProfitLoss = async () => {
+    const token = localStorage.getItem("token"); // jahan bhi aap token store karte ho
     if (!startDate || !endDate) {
       setError("Please select both start and end date");
       return;
@@ -27,9 +28,14 @@ export default function ProfitLoss() {
     try {
       setLoading(true);
       setError("");
-      const res = await fetch(
-        `${BASE_URL}/api/profit-loss?startDate=${startDate}&endDate=${endDate}`
-      );
+     const res = await fetch(
+  `${BASE_URL}/api/profit-loss?startDate=${startDate}&endDate=${endDate}`,
+  {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+);
       if (!res.ok) throw new Error("Failed to fetch data");
       const result = await res.json();
       setData(result);
