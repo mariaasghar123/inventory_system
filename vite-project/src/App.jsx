@@ -32,6 +32,7 @@ import ReturnNewForm from "./pages/returns/ReturnsNewForm";
 import Signup from "./pages/register/Signup";
 import Login from "./pages/register/Login";
 import EditSaleItemForm from "./pages/saleitem/SaleItemEdit";
+import ProfitLoss from "./pages/profitloss/ProfitLoss";
 
 
 export default function App() {
@@ -70,6 +71,7 @@ export default function App() {
           <Route path="/returns" element={<ReturnList />} />{" "}
           <Route path="/returns/new" element={<ReturnNewForm />} />{" "}
           <Route path="/returns/edit/:id" element={<ReturnEditForm />} />
+          <Route path="/profit-loss" element={<ProfitLoss />} />
 
           
          

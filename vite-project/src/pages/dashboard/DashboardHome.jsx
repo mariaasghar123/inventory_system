@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
 import {
   FaBox,
   FaCashRegister,
@@ -10,13 +9,29 @@ import {
 } from "react-icons/fa";
 import LiveChart from "./LiveChart";
 
-// ✅ Centralized Base URL
 const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 export default function DashboardHome() {
   const [recentActivities, setRecentActivities] = useState([]);
+  const [currentUser, setCurrentUser] = useState(
+    JSON.parse(localStorage.getItem("user"))
+  );
 
-  // fetch recent activities from backend
+  // ✅ Watch localStorage changes
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setCurrentUser(JSON.parse(localStorage.getItem("user")));
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
+  }, []);
+
+  // ✅ Or if logout/login happens in same tab:
+  // Call setCurrentUser(JSON.parse(localStorage.getItem("user")))
+  // in your login/logout logic directly.
+
+  // fetch recent activities
   const fetchActivities = () => {
     fetch(`${BASE_URL}/api/dashboard/recent-activities`)
       .then((res) => res.json())
@@ -25,9 +40,9 @@ export default function DashboardHome() {
   };
 
   useEffect(() => {
-    fetchActivities(); // load on mount
-    const interval = setInterval(fetchActivities, 10000); // refresh every 10 sec
-    return () => clearInterval(interval); // cleanup
+    fetchActivities();
+    const interval = setInterval(fetchActivities, 10000);
+    return () => clearInterval(interval);
   }, []);
 
   // cards
@@ -49,14 +64,6 @@ export default function DashboardHome() {
       hoverColor: "hover:bg-green-400",
     },
     {
-      title: "Expenses",
-      desc: "Track costs",
-      icon: <FaMoneyBill className="text-white text-4xl mb-3" />,
-      link: "/expenses",
-      bgColor: "bg-yellow-900",
-      hoverColor: "hover:bg-yellow-800",
-    },
-    {
       title: "Purchases",
       desc: "Manage purchases",
       icon: <FaShoppingBag className="text-white text-4xl mb-3" />,
@@ -64,11 +71,30 @@ export default function DashboardHome() {
       bgColor: "bg-purple-700",
       hoverColor: "hover:bg-purple-600",
     },
+    ...(currentUser?.role === "admin"
+      ? [
+          {
+            title: "Expenses",
+            desc: "Track costs",
+            icon: <FaMoneyBill className="text-white text-4xl mb-3" />,
+            link: "/expenses",
+            bgColor: "bg-yellow-900",
+            hoverColor: "hover:bg-yellow-800",
+          },
+          {
+            title: "Profit & Loss",
+            desc: "View reports",
+            icon: <FaBox className="text-white text-4xl mb-3" />,
+            link: "/profit-loss",
+            bgColor: "bg-red-600",
+            hoverColor: "hover:bg-red-500",
+          },
+        ]
+      : []),
   ];
 
   return (
     <div className="space-y-10">
-      {/* Title */}
       <div>
         <h1 className="text-3xl font-bold mb-2">Welcome to My Inventory Dashboard</h1>
         <p className="text-gray-600">Quick overview of your inventory system.</p>
@@ -89,7 +115,6 @@ export default function DashboardHome() {
         ))}
       </div>
 
-      {/* Live Chart */}
       <LiveChart />
 
       {/* Quick Actions */}

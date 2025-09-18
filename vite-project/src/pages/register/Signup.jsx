@@ -10,6 +10,7 @@ export default function Signup() {
   const [formData, setFormData] = useState({
     name: "",
     username: "",
+    role:"",
     email: "",
     password: "",
   });
@@ -91,6 +92,18 @@ export default function Signup() {
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
+            <select
+  name="role"
+  onChange={handleChange}
+  value={formData.role}
+  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+  required
+>
+  <option value="">Select Role</option>
+  <option value="user">User</option>
+  <option value="salesman">Salesman</option>
+  <option value="admin">Admin</option>
+</select>
             <input
               name="email"
               type="email"

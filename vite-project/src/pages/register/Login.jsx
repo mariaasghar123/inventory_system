@@ -29,8 +29,16 @@ export default function Login() {
       const data = await res.json();
 
       if (res.ok && data.token) {
+        // ✅ Save token
         localStorage.setItem("token", data.token);
-        navigate("/"); // Redirect to home/dashboard
+
+        // ✅ Save user info (if backend is sending user object)
+        if (data.user) {
+          localStorage.setItem("user", JSON.stringify(data.user));
+        }
+
+        // ✅ Redirect after login
+        navigate("/"); // home/dashboard page
       } else {
         setError(data.message || "Login failed");
       }
