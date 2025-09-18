@@ -9,6 +9,8 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
+// ✅ Base URL for API
+const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 export default function ProfitLoss() {
   const [startDate, setStartDate] = useState("");
@@ -26,7 +28,7 @@ export default function ProfitLoss() {
       setLoading(true);
       setError("");
       const res = await fetch(
-        `http://localhost:5000/api/profit-loss?startDate=${startDate}&endDate=${endDate}`
+        `${BASE_URL}/api/profit-loss?startDate=${startDate}&endDate=${endDate}`
       );
       if (!res.ok) throw new Error("Failed to fetch data");
       const result = await res.json();
